@@ -40,19 +40,18 @@ def lambda_handler(event, context):
     tree = html.fromstring(page.content)
     appointments = tree.xpath(RESERVATION_XPATH)
 
-    if not u'δεν υπάρχει Διαθεσιμότητα.' in appointments[0].text_content():
-        print(datetime.now().isoformat(), 'Appointments available!')
-        send_email('Available appointments')
-        return {
-            'statusCode': 201,
-            'body': json.dumps('Available appointments')
-        }
-    else:
+    if u'δεν υπάρχει Διαθεσιμότητα.' in appointments[0].text_content():
         print(datetime.now().isoformat(), "No Appointments")
         return {
             'statusCode': 200,
             'body': json.dumps('No available appointments')
         }
+    print(datetime.now().isoformat(), 'Appointments available!')
+    email_sent = send_email('Available appointments')
+    return {
+        'statusCode': 200,
+        'body': json.dumps(f'Available appointments, Email Sent: {email_sent}')
+    }
 
 if __name__ == '__main__':
     lambda_handler(None, None)
