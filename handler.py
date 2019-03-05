@@ -9,9 +9,8 @@ from datetime import datetime
 
 RESERVATION_XPATH = '//*[@id="dnn_ctr484_MakeReservation_availabilityRepeater_availabilityLabel_2"]'
 EMBASSY_URL = 'https://www.greekembassy.org.uk/el-gr/Reservations'
-REDIS_KEY = 'EMAIL_SENT'
 
-gmail_user = "latusaki@gmail.com"
+gmail_user = os.environ['GMAIL_USER']
 gmail_pwd = os.environ['GMAIL_PASSWORD']
 
 def send_email(text):
@@ -49,7 +48,7 @@ def lambda_handler(event, context):
             'body': json.dumps('Available appointments')
         }
     else:
-        print("No Appointments")
+        print(datetime.now().isoformat(), "No Appointments")
         return {
             'statusCode': 200,
             'body': json.dumps('No available appointments')
